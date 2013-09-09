@@ -1,6 +1,6 @@
 {
   "name": "csp"
-  , "description": "Communicating sequential processes for node."
+  , "description": "Communicating sequential processes for node. Go style concurrency with channels."
   , "version": "0.0.1alpha1"
   , "author": "Ola Holmström <olaholmstrom+github@gmail.com>"
   , "keywords": ["csp", "concurrency", "async", "coroutines", "generators"]

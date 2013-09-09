@@ -21,13 +21,11 @@ var filter = function* (inc, out, prime) {
 };
 
 csp.spawn(function* () {
-  var chs = [];
   var ch = new csp.Chan();
 
   yield csp.spawn(generate(1000), ch);
 
   for (var i = 0; i < 10; i++) {
-    chs.push(ch);
     var prime = yield ch.take();
     console.log(prime);
     ch1 = new csp.Chan();

@@ -1,8 +1,22 @@
 # node-csp
 
-Communicating sequential processes for node.
+Communicating sequential processes for node. Go style concurrency with
+channels.
 
 **WARNING: This package is at an experimental stage at the moment.**
+
+## Requirements
+
+This package requires ES6 generators which are switched on in node 0.11.6
+through passing the `-harmony` flag to the node interpreter.
+
+## Install
+
+    $ npm i csp
+
+## Run
+
+    $ node -harmony <file>.js
 
 ## Example
 
@@ -30,13 +44,11 @@ var filter = function* (inc, out, prime) {
 };
 
 csp.spawn(function* () {
-  var chs = [];
   var ch = new csp.Chan();
 
   yield csp.spawn(generate(1000), ch);
 
   for (var i = 0; i < 10; i++) {
-    chs.push(ch);
     var prime = yield ch.take();
     console.log(prime);
     ch1 = new csp.Chan();
