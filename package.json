@@ -1,0 +1,27 @@
+{
+  "name": "csp"
+  , "description": "Communicating sequential processes for node."
+  , "version": "0.0.1alpha1"
+  , "author": "Ola Holmström <olaholmstrom+github@gmail.com>"
+  , "keywords": ["csp", "concurrency", "async", "coroutines", "generators"]
+  , "main": "./index.js"
+  , "repository": {
+    "type": "git"
+    , "url": "http://github.com/olahol/node-csp.git"
+  }
+  , "licenses": [
+    {
+      "type": "MIT"
+      , "url": "http://github.com/olahol/node-csp/raw/master/LICENSE"
+    }
+  ]
+  , "devDependencies": {
+    "mocha": "*"
+    , "ben": "*"
+  }
+  , "scripts": {
+    "test": "mocha --harmony -R spec"
+    , "bench": "node --harmony bench/"
+  }
+  , "engines": { "node": ">= 0.11.6" }
+}
