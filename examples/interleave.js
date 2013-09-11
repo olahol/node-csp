@@ -1,18 +1,19 @@
 var csp = require("..");
 
-var chan1 = new csp.Chan();
+var chan1 = new csp.Chan(); // Create an unbuffered channel.
 
 csp.spawn(function* () {
-  var i = 0;
-  for (;;) {
-    yield chan1.put(i);
-    console.log("->", i);
-    i += 1;
+  for (var i = 0; i < 10; i++) {
+    console.log("put", i);
+    yield chan1.put(i); // Send 'i' on channel 'chan1'.
   }
+  yield chan1.put(null);
 });
 
 csp.spawn(function* () {
   for (;;) {
-    console.log("<-", yield chan1.take());
+    var i = yield chan1.take(); // Take a value of 'chan1'.
+    if (i === null) break; // Quit if we get 'null'.
+    console.log("take", i);
   }
 });

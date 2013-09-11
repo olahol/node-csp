@@ -20,34 +20,62 @@ through passing the `-harmony` flag to the node interpreter.
 
 ## Example
 
+A simple example sending and recieving values on a channel between
+two routines.
+
+```js
+var csp = require("csp");
+
+var chan1 = new csp.Chan(); // Create an unbuffered channel.
+
+csp.spawn(function* () {
+  for (var i = 0; i < 10; i++) {
+    console.log("put", i);
+    yield chan1.put(i); // Send 'i' on channel 'chan1'.
+  }
+  yield chan1.put(null);
+});
+
+csp.spawn(function* () {
+  for (;;) {
+    var i = yield chan1.take(); // Take a value of 'chan1'.
+    if (i === null) break; // Quit if we get 'null'.
+    console.log("take", i);
+  }
+});
+```
+
+A more complex example setting up a daisy chained prime sieve.
+
 ```js
 // Concurrent prime sieve.
 // http://golang.org/doc/play/sieve.go
 
 var csp = require("csp");
 
-var generate = function (n) {
-  return function* (ch) {
-    for (var i = 2; i < n; i++) {
-      yield ch.put(i);
-    }
-  };
+// Send the sequence 2, 3, 4, ... to channel 'ch'.
+var generate = function* (ch) {
+  for (var i = 2;;i++) {
+    yield ch.put(i); // Send 'i' to channel 'ch'.
+  }
 };
 
-var filter = function* (inc, out, prime) {
+
+// Copy the values from channel 'inch' to channel 'outch',
+// removing those divisible by 'prime'.
+var filter = function* (inch, outch, prime) {
   for (;;) {
-    var i = yield inc.take();
+    var i = yield inch.take(); // Receive value from 'inch'.
     if (i % prime != 0) {
-      yield out.put(i);
+      yield outch.put(i); // Send 'i' to 'out'.
     }
   }
 };
 
-csp.spawn(function* () {
-  var ch = new csp.Chan();
-
-  yield csp.spawn(generate(1000), ch);
-
+// The prime sieve: Daisy-chain Filter processes.
+var main = function* () {
+  var ch = new csp.Chan(); // Create a new channel.
+  yield csp.spawn(generate, ch); // Launch Generate goroutine.
   for (var i = 0; i < 10; i++) {
     var prime = yield ch.take();
     console.log(prime);
@@ -55,7 +83,10 @@ csp.spawn(function* () {
     yield csp.spawn(filter, ch, ch1, prime);
     ch = ch1;
   }
-});
+};
+
+// Start the main routine.
+csp.spawn(main);
 ```
 
 ## Documentation
