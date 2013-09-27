@@ -20,7 +20,7 @@ through passing the `-harmony` flag to the node interpreter.
 
 ## Example
 
-A simple example sending and recieving values on a channel between
+A simple example sending and receiving values on a channel between
 two routines.
 
 ```js
@@ -75,7 +75,7 @@ var filter = function* (inch, outch, prime) {
 // The prime sieve: Daisy-chain Filter processes.
 var main = function* () {
   var ch = new csp.Chan(); // Create a new channel.
-  yield csp.spawn(generate, ch); // Launch Generate goroutine.
+  yield csp.spawn(generate, ch); // Launch Generate routine.
   for (var i = 0; i < 10; i++) {
     var prime = yield ch.take();
     console.log(prime);

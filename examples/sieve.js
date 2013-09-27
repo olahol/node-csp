@@ -25,7 +25,7 @@ var filter = function* (inch, outch, prime) {
 // The prime sieve: Daisy-chain Filter processes.
 var main = function* () {
   var ch = new csp.Chan(); // Create a new channel.
-  yield csp.spawn(generate, ch); // Launch Generate goroutine.
+  yield csp.spawn(generate, ch); // Launch Generate routine.
   for (var i = 0; i < 10; i++) {
     var prime = yield ch.take();
     console.log(prime);
